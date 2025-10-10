@@ -30,7 +30,7 @@ lemma divRemovable_zero_of_ne_zero {z : ℂ} (f : ℂ → ℂ) (z_ne_0 : z ≠ 0
 -- analytic on the same open set.
 
 lemma AnalyticOn.divRemovable_zero {f : ℂ → ℂ} {s : Set ℂ}
-    (sInNhds0 : s ∈ nhds 0) (zero : f 0 = 0) (o : IsOpen s)
+    (sInNhds0 : s ∈ nhds (0 : ℂ)) (zero : f 0 = 0) (o : IsOpen s)
     (analytic : AnalyticOn ℂ f s) : AnalyticOn ℂ (divRemovable_zero f) s := by
   rw [Complex.analyticOn_iff_differentiableOn o]
   rw [←(Complex.differentiableOn_compl_singleton_and_continuousAt_iff sInNhds0)]
@@ -51,9 +51,9 @@ lemma AnalyticOn.divRemovable_zero {f : ℂ → ℂ} {s : Set ℂ}
 -- show that if f is analytic on a closed set C, then it is analytic on an
 -- open set O containing the closed set C and apply the previous lemma.
 
-lemma AnalyticOn_divRemovable_zero_closedBall {f : ℂ → ℂ} {R : ℝ}
+lemma AnalyticOn.divRemovable_zero_closedBall {f : ℂ → ℂ} {R : ℝ}
     (Rpos : 0 < R) (analytic : AnalyticOn ℂ f (Metric.closedBall 0 R))
-    (zero : f 0 = 0) : AnalyticOn ℂ (divRemovable_zero f) (Metric.closedBall 0 R) := by
+    (zero : f 0 = 0) : AnalyticOn ℂ (_root_.divRemovable_zero f) (Metric.closedBall (0 : ℂ) R) := by
   apply analyticOn_of_locally_analyticOn
   intro x x_hyp
   by_cases h : ‖x‖ = R
@@ -62,7 +62,7 @@ lemma AnalyticOn_divRemovable_zero_closedBall {f : ℂ → ℂ} {R : ℝ}
     · exact Metric.isOpen_ball
     · constructor
       · simp only [Metric.mem_ball, dist_self, Nat.ofNat_pos, div_pos_iff_of_pos_right]; positivity
-      · have Z : ∀ w ∈ Metric.closedBall 0 R ∩ Metric.ball x (R / 2), divRemovable_zero f w = f w / w := by
+      · have Z : ∀ w ∈ Metric.closedBall 0 R ∩ Metric.ball x (R / 2), _root_.divRemovable_zero f w = f w / w := by
           intro x₂ hyp_x₂
           apply divRemovable_zero_of_ne_zero
           rw [ball_eq, Set.mem_inter_iff, Metric.mem_closedBall, dist_zero_right, Set.mem_setOf_eq] at hyp_x₂
@@ -124,7 +124,7 @@ lemma AnalyticOn.schwartzQuotient {f : ℂ → ℂ} {R : ℝ} (M : ℝ)
     apply Metric.closedBall_mem_nhds; exact Rpos
 
   exact AnalyticOn.div
-    (AnalyticOn_divRemovable_zero_closedBall Rpos analytic zero)
+    (AnalyticOn.divRemovable_zero_closedBall Rpos analytic zero)
     (AnalyticOn.sub (analyticOn_const) analytic) nonzero
 
 -- If Re x ≤ M then |x| ≤ |2 * M - x|, this simple inequality is used
